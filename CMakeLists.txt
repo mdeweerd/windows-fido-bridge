@@ -50,11 +50,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # 3P dependencies.
 include(BuildFmt)
 include(BuildSpdlog)
-
-if (BUILD_LINUX_MIDDLEWARE)
-    include(BuildMingwStdThreads)
-endif()
-
 include(BuildGoogleTest)
 
 if (BUILD_TESTS)

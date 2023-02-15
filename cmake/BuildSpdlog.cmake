@@ -1,5 +1,4 @@
 include(BuildFmt)
-include(BuildMingwStdThreads)
 
 include(FetchContent)
 
@@ -22,5 +21,5 @@ option(SPDLOG_FMT_EXTERNAL "" ON)
 add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 
 if (MINGW)
-    target_link_libraries(spdlog PUBLIC mingw_stdthreads fmt)
+    target_link_libraries(spdlog PUBLIC fmt)
 endif()

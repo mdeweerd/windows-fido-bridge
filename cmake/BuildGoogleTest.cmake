@@ -22,8 +22,6 @@ add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 if (MINGW)
     # When cross-compiling with MinGW, make the Google Test-generated
     # executables statically-linked to allow them to run with no extra DLLs.
-    include(BuildMingwStdThreads)
-
-    target_link_libraries(gtest PUBLIC -static mingw_stdthreads)
-    target_link_libraries(gtest_main PUBLIC -static mingw_stdthreads)
+    target_link_libraries(gtest PUBLIC -static)
+    target_link_libraries(gtest_main PUBLIC -static)
 endif()
