@@ -3,8 +3,6 @@
 #include <windows_fido_bridge/windows_error.hpp>
 #include <windows_fido_bridge/windows_util.hpp>
 
-#include <windows_fido_bridge/format.hpp>
-
 #include <spdlog/spdlog.h>
 
 #include <windows.h>

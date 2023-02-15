@@ -3,10 +3,9 @@
 #include <windows_fido_bridge/windows_error.hpp>
 #include <windows_fido_bridge/windows_fwd.hpp>
 #include <windows_fido_bridge/windows_util.hpp>
-
-#include <windows_fido_bridge/format.hpp>
 #include <windows_fido_bridge/types.hpp>
 
+#include <fmt/format.h>
 #include <sk-api.h>
 
 #include <iostream>
@@ -28,7 +27,7 @@ struct webauthn_methods {
         auto library_name = "webauthn.dll";
         HINSTANCE library = LoadLibraryA(library_name);
         if (library == nullptr) {
-            throw_windows_exception("Failed to load {}"_format(library_name));
+            throw_windows_exception(fmt::format("Failed to load {}", library_name));
         }
 
         std::shared_ptr<void> library_handle(library, [](HINSTANCE ptr) { FreeLibrary(ptr); });
@@ -176,7 +175,7 @@ unique_webauthn_credential_attestation_ptr create_windows_webauthn_credential(
             webauthn_alg = WEBAUTHN_COSE_ALGORITHM_EDDSA_ED25519;
             break;
         default:
-            throw std::runtime_error("Unrecognized OpenSSH algorithm {}"_format(webauthn_alg));
+            throw std::runtime_error(fmt::format("Unrecognized OpenSSH algorithm {}", webauthn_alg));
     }
 
     std::array<WEBAUTHN_COSE_CREDENTIAL_PARAMETER, 1> cose_credential_parameters_array{
@@ -230,7 +229,7 @@ unique_webauthn_credential_attestation_ptr create_windows_webauthn_credential(
 
     if (result != S_OK) {
         std::string error_str = wide_string_to_string(webauthn.GetErrorName(result));
-        throw_windows_exception(result, "Failed to make WebAuthN credential ({})"_format(error_str));
+        throw_windows_exception(result, fmt::format("Failed to make WebAuthN credential ({})", error_str));
     }
 
     return credential_attestation;
@@ -292,7 +291,7 @@ unique_webauthn_assertion_ptr create_windows_webauthn_assertion(
 
     if (result != S_OK) {
         std::string error_str = wide_string_to_string(webauthn.GetErrorName(result));
-        throw_windows_exception(result, "Failed to get WebAuthN assertion ({})"_format(error_str));
+        throw_windows_exception(result, fmt::format("Failed to get WebAuthN assertion ({})", error_str));
     }
 
     return assertion;
@@ -326,22 +325,22 @@ std::string attested_credential_data::dump_debug() const {
         }
 
         for (unsigned int i = 0; i < group_size; i++) {
-            ss << "{:02x}"_format(authenticator_attestation_guid[guid_i + i]);
+            ss << fmt::format("{:02x}", authenticator_attestation_guid[guid_i + i]);
         }
 
         guid_i += group_size;
     }
 
     ss << "\n";
-    ss << "Credential ID ({} bytes): 0x"_format(id.size());
+    ss << fmt::format("Credential ID ({} bytes): 0x", id.size());
     for (uint8_t byte : id) {
-        ss << "{:02x}"_format(byte);
+        ss << fmt::format("{:02x}", byte);
     }
 
     ss << "\n";
-    ss << "Public key ({} bytes): 0x"_format(public_key.size());
+    ss << fmt::format("Public key ({} bytes): 0x", public_key.size());
     for (uint8_t byte : public_key) {
-        ss << "{:02x}"_format(byte);
+        ss << fmt::format("{:02x}", byte);
     }
 
     return ss.str();
@@ -369,16 +368,16 @@ std::string authenticator_data::dump_debug() const {
     ss << "Relying party ID hash: 0x";
 
     for (uint8_t byte : relying_party_id_hash) {
-        ss << "{:02x}"_format(byte);
+        ss << fmt::format("{:02x}", byte);
     }
 
     ss << "\n";
-    ss << "Flags: 0b{:08b}\n"_format(flags);
-    ss << "    User present result: {}\n"_format(user_present_result());
-    ss << "    User verified result: {}\n"_format(user_verified_result());
-    ss << "    Attested credential data included: {}\n"_format(attested_credential_data_included());
-    ss << "    Extension data included: {}\n"_format(extension_data_included());
-    ss << "Signature count: {}\n"_format(signature_count);
+    ss << fmt::format("Flags: 0b{:08b}\n", flags);
+    ss << fmt::format("    User present result: {}\n", user_present_result());
+    ss << fmt::format("    User verified result: {}\n", user_verified_result());
+    ss << fmt::format("    Attested credential data included: {}\n", attested_credential_data_included());
+    ss << fmt::format("    Extension data included: {}\n", extension_data_included());
+    ss << fmt::format("Signature count: {}\n", signature_count);
 
     if (attested_credential) {
         ss << attested_credential->dump_debug() << "\n";
@@ -478,7 +477,7 @@ std::string get_cose_key_type_description(cose_key_type kty) {
 }
 
 std::string get_cose_key_type_debug_description(cose_key_type kty) {
-    return "{} (kty = {})"_format(get_cose_key_type_description(kty), kty);
+    return fmt::format("{} (kty = {})", get_cose_key_type_description(kty), (int) kty);
 }
 
 std::string get_cose_key_algorithm_description(cose_key_algorithm alg) {
@@ -499,7 +498,7 @@ std::string get_cose_key_algorithm_description(cose_key_algorithm alg) {
 }
 
 std::string get_cose_key_algorithm_debug_description(cose_key_algorithm alg) {
-    return "{} (alg = {})"_format(get_cose_key_algorithm_description(alg), alg);
+    return fmt::format("{} (alg = {})", get_cose_key_algorithm_description(alg), (int) alg);
 }
 
 std::string get_cose_ec2_curve_type_description(cose_ec2_curve_type crv) {
@@ -512,7 +511,7 @@ std::string get_cose_ec2_curve_type_description(cose_ec2_curve_type crv) {
 }
 
 std::string get_cose_ec2_curve_type_debug_description(cose_ec2_curve_type crv) {
-    return "{} (crv = {})"_format(get_cose_ec2_curve_type_description(crv), crv);
+    return fmt::format("{} (crv = {})", get_cose_ec2_curve_type_description(crv), (int) crv);
 }
 
 std::string get_cose_okp_curve_type_description(cose_okp_curve_type crv) {
@@ -526,7 +525,7 @@ std::string get_cose_okp_curve_type_description(cose_okp_curve_type crv) {
 }
 
 std::string get_cose_okp_curve_type_debug_description(cose_okp_curve_type crv) {
-    return "{} (crv = {})"_format(get_cose_okp_curve_type_description(crv), crv);
+    return fmt::format("{} (crv = {})", get_cose_okp_curve_type_description(crv), (int) crv);
 }
 
 byte_vector parse_attested_credential_ec2_public_key(const cbor_map& public_key_map);
@@ -555,7 +554,7 @@ byte_vector parse_attested_credential_public_key(binary_reader& reader) {
             break;
         default:
             throw std::invalid_argument(
-                "Public key type \"{}\" is not supported"_format(get_cose_key_type_debug_description(kty))
+                fmt::format("Public key type \"{}\" is not supported", get_cose_key_type_debug_description(kty))
             );
     }
 
@@ -575,7 +574,10 @@ byte_vector parse_attested_credential_okp_public_key(const cbor_map& public_key_
     spdlog::debug("Public key algorithm: {}", get_cose_key_algorithm_debug_description(alg));
     if (alg != cose_key_algorithm::EDDSA_ED25519) {
         throw std::invalid_argument(
-            "Public key algorithm \"{}\" is not supported"_format(get_cose_key_algorithm_debug_description(alg))
+            fmt::format(
+                "Public key algorithm \"{}\" is not supported",
+                get_cose_key_algorithm_debug_description(alg)
+            )
         );
     }
 
@@ -588,7 +590,8 @@ byte_vector parse_attested_credential_okp_public_key(const cbor_map& public_key_
     spdlog::debug("Public key OKP curve type: {}", get_cose_okp_curve_type_debug_description(crv));
     if (crv != cose_okp_curve_type::Ed25519) {
         throw std::invalid_argument(
-            "OKP curve type {} is not consistent with other public key parameters"_format(
+            fmt::format(
+                "OKP curve type {} is not consistent with other public key parameters",
                 get_cose_okp_curve_type_debug_description(crv)
             )
         );
@@ -603,7 +606,8 @@ byte_vector parse_attested_credential_okp_public_key(const cbor_map& public_key_
 
     if (raw_x_coordinate->size() != 32) {
         throw std::invalid_argument(
-            "Ed25519 keys must be 256 bits, but X coordinate is {} bits"_format(
+            fmt::format(
+                "Ed25519 keys must be 256 bits, but X coordinate is {} bits",
                 raw_x_coordinate->size() * 8
             )
         );
@@ -626,7 +630,10 @@ byte_vector parse_attested_credential_ec2_public_key(const cbor_map& public_key_
     spdlog::debug("Public key algorithm: {}", get_cose_key_algorithm_debug_description(alg));
     if (alg != cose_key_algorithm::ECDSA_P256_WITH_SHA256) {
         throw std::invalid_argument(
-            "Public key algorithm \"{}\" is not supported"_format(get_cose_key_algorithm_debug_description(alg))
+            fmt::format(
+                "Public key algorithm \"{}\" is not supported",
+                get_cose_key_algorithm_debug_description(alg)
+            )
         );
     }
 
@@ -639,7 +646,8 @@ byte_vector parse_attested_credential_ec2_public_key(const cbor_map& public_key_
     spdlog::debug("Public key EC2 curve type: {}", get_cose_ec2_curve_type_debug_description(crv));
     if (crv != cose_ec2_curve_type::P256) {
         throw std::invalid_argument(
-            "EC2 curve type {} is not consistent with other public key parameters"_format(
+            fmt::format(
+                "EC2 curve type {} is not consistent with other public key parameters",
                 get_cose_ec2_curve_type_debug_description(crv)
             )
         );

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <windows_fido_bridge/format.hpp>
 #include <windows_fido_bridge/util.hpp>
+
+#include <fmt/format.h>
 
 #include <array>
 #include <cstdint>
@@ -50,7 +51,7 @@ void be_bytes_to_integer_into(const uint8_t* buffer, T& value) {
 template <typename T, size_t N = sizeof(T), std::enable_if_t<std::is_integral_v<T>, int> = 0>
 void be_bytes_to_integer_into(const std::vector<uint8_t>& buffer, T& value) {
     if (buffer.size() < N) {
-        throw std::runtime_error("buffer is too small to read {} bytes"_format(N));
+        throw std::runtime_error(fmt::format("buffer is too small to read {} bytes", N));
     }
 
     be_bytes_to_integer_into(buffer.data(), value);
@@ -171,7 +172,7 @@ private:
 
     void _ensure_bytes_available(size_t num_bytes) const {
         if (num_bytes > bytes_remaining()) {
-            throw std::runtime_error("Cannot read {} bytes because only {} bytes are left to read"_format(num_bytes, bytes_remaining()));
+            throw std::runtime_error(fmt::format("Cannot read {} bytes because only {} bytes are left to read", num_bytes, bytes_remaining()));
         }
     }
 

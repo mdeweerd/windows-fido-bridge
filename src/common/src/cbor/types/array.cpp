@@ -8,7 +8,7 @@ namespace wfb {
 cbor_array::cbor_array(binary_reader& reader) {
     auto [type, num_elements] = read_raw_length(reader);
     if (type != CBOR_ARRAY) {
-        throw std::runtime_error("Invalid type value {:02x} for cbor_array"_format(type));
+        throw std::runtime_error(fmt::format("Invalid type value {:02x} for cbor_array", type));
     }
 
     _array.reserve(num_elements);

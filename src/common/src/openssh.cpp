@@ -1,8 +1,7 @@
 #include <windows_fido_bridge/openssh.hpp>
-
-#include <windows_fido_bridge/format.hpp>
 #include <windows_fido_bridge/util.hpp>
 
+#include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
 extern "C" {
@@ -130,7 +129,7 @@ namespace {
 
 void log_sk_options(std::span<const parsed_sk_option> options, std::string_view indent_str) {
     if (options.empty()) {
-        spdlog::debug("{}(No options provided)"_format(indent_str));
+        spdlog::debug(fmt::format("{}(No options provided)", indent_str));
         return;
     }
 

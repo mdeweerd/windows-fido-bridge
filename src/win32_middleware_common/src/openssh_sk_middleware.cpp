@@ -251,7 +251,7 @@ std::tuple<int, unique_sk_sign_response_ptr> sk_sign_safe(
             signature = fido_signature::parse_ecdsa_sk_signature(raw_signature);
             break;
         default:
-            throw std::runtime_error("Unrecognized OpenSSH algorithm {}"_format(alg));
+            throw std::runtime_error(fmt::format("Unrecognized OpenSSH algorithm {}", alg));
     }
 
     if (signature.sig_r) {
@@ -277,7 +277,7 @@ bool verify_supported_crypto_algorithm(uint8_t alg) {
     std::string algo_name;
     switch (alg) {
         default:
-            algo_name = "(unknown, sk-api ID = 0x{:02x})"_format(alg);
+            algo_name = fmt::format("(unknown, sk-api ID = 0x{:02x})", alg);
             break;
     }
 

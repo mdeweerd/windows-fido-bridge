@@ -3,6 +3,8 @@
 
 #include <windows_fido_bridge/binary_io.hpp>
 
+#include <fmt/format.h>
+
 namespace wfb {
 
 std::tuple<uint8_t, uint64_t> read_raw_length(binary_reader& reader) {
@@ -22,7 +24,8 @@ std::tuple<uint8_t, uint64_t> read_raw_length(binary_reader& reader) {
             case 27: raw_value = reader.read_be_uint64_t(); break;
             default:
                 throw std::runtime_error(
-                    "Invalid additional information value {} for length (initial_byte = 0x{:02x})"_format(
+                    fmt::format(
+                        "Invalid additional information value {} for length (initial_byte = 0x{:02x})",
                         additional_info, initial_byte
                     )
                 );

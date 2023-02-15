@@ -25,7 +25,7 @@ public:
     explicit basic_cbor_map(binary_reader& reader) {
         auto [type, num_pairs] = read_raw_length(reader);
         if (type != CBOR_MAP) {
-            throw std::runtime_error("Invalid type value {:02x} for cbor_map"_format(type));
+            throw std::runtime_error(fmt::format("Invalid type value {:02x} for cbor_map", type));
         }
 
         for (uint64_t i = 0; i < num_pairs; i++) {

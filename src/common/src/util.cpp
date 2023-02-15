@@ -1,7 +1,6 @@
 #include "windows_fido_bridge/util.hpp"
 
-#include "windows_fido_bridge/format.hpp"
-
+#include <fmt/format.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
@@ -17,7 +16,7 @@ template <typename Output>
 void dump_binary_line(Output& output, const uint8_t* buffer, size_t length) {
     // Print hex values
     for (size_t i = 0; i < length; i++) {
-        output << "{:02x} "_format(buffer[i]);
+        output << fmt::format("{:02x} ", buffer[i]);
     }
 
     // If we didn't print a full line, print some padding to line up this
@@ -50,14 +49,14 @@ void dump_binary(std::stringstream& ss, const uint8_t* buffer, size_t length, si
     // Print a header
     ss << indent_str << "      ";
     for (size_t i = 0; i < DUMP_BINARY_LINE_LENGTH; i++) {
-        ss << " {:x} "_format(i);
+        ss << fmt::format(" {:x} ", i);
     }
 
     ss << "\n";
 
     // Print the values
     for (size_t i = 0; i < length; i += DUMP_BINARY_LINE_LENGTH) {
-        ss << indent_str << "{:04x}: "_format(i);
+        ss << indent_str << fmt::format("{:04x}: ", i);
 
         dump_binary_line(ss, buffer + i, std::min(DUMP_BINARY_LINE_LENGTH, length - i));
     }
@@ -113,7 +112,7 @@ void log_multiline(const std::string& data, const std::string& indent_str) {
 void log_multiline(std::stringstream& data, const std::string& indent_str) {
     std::string token;
     while (std::getline(data, token, '\n')) {
-        spdlog::debug("{}{}"_format(indent_str, token));
+        spdlog::debug(fmt::format("{}{}", indent_str, token));
     }
 }
 

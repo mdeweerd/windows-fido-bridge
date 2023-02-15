@@ -24,7 +24,7 @@ public:
     explicit cbor_integer(binary_reader& reader) {
         std::tie(_type, _raw_value) = read_raw_length(reader);
         if (_type != CBOR_NON_NEGATIVE_INTEGER && _type != CBOR_NEGATIVE_INTEGER) {
-            throw std::runtime_error("Invalid type value {:02x} for cbor_integer"_format(_type));
+            throw std::runtime_error(fmt::format("Invalid type value {:02x} for cbor_integer", _type));
         }
     }
 

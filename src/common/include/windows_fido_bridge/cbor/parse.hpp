@@ -50,7 +50,7 @@ TCborValue parse_cbor_from_reader(binary_reader& reader) {
         }
     }
 
-    throw std::runtime_error("Unrecognized CBOR type {} at byte {}"_format(type, reader.index()));
+    throw std::runtime_error(fmt::format("Unrecognized CBOR type {} at byte {}", type, reader.index()));
 }
 
 }  // namespace detail

@@ -6,7 +6,7 @@ endif()
 
 FetchContent_Declare(fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG f19b1a521ee8b606dedcadfda69fd10ddf882753  # 7.0.1
+    GIT_TAG 9.1.0
     GIT_SHALLOW ON
 )
 

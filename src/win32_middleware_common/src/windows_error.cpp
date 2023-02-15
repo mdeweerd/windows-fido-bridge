@@ -1,7 +1,6 @@
 #include <windows_fido_bridge/windows_error.hpp>
 
-#include <windows_fido_bridge/format.hpp>
-
+#include <fmt/format.h>
 #include <windows.h>
 
 #include <memory>
@@ -39,7 +38,7 @@ struct windows_error_category : public std::error_category {
         if (num_chars == 0) {
             // Failed to format the message, just return the code itself as a
             // string
-            return "Windows error code 0x{:08x}"_format(ev);
+            return fmt::format("Windows error code 0x{:08x}", ev);
         }
 
         // Strip trailing newlines

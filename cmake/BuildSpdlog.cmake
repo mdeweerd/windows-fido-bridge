@@ -8,7 +8,7 @@ endif()
 
 FetchContent_Declare(spdlog
     GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG 616caa5d30172b65cc3a06800894c575d70cb8e6  # 1.7.0
+    GIT_TAG v1.11.0
     GIT_SHALLOW ON
 )
 

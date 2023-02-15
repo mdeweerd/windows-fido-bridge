@@ -1,8 +1,9 @@
 #pragma once
 
-#include <windows_fido_bridge/format.hpp>
 #include <windows_fido_bridge/windows_error.hpp>
 #include <windows_fido_bridge/windows_fwd.hpp>
+
+#include <fmt/format.h>
 
 #include <memory>
 #include <string>
@@ -35,7 +36,7 @@ template <typename T>
 T get_proc_address(HINSTANCE library, const char* method_name) {
     auto result = reinterpret_cast<T>(detail::GetProcAddress(library, method_name));
     if (result == nullptr) {
-        throw_windows_exception("Failed to find method {}"_format(method_name));
+        throw_windows_exception(fmt::format("Failed to find method {}", method_name));
     }
 
     return result;

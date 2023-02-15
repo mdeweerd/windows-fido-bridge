@@ -44,7 +44,7 @@ public:
     explicit basic_cbor_string(binary_reader& reader) {
         auto [type, size] = read_raw_length(reader);
         if (type != detail::basic_cbor_string_type_v<value_type>) {
-            throw std::runtime_error("Invalid type value {:02x} for basic_cbor_string"_format(type));
+            throw std::runtime_error(fmt::format("Invalid type value {:02x} for basic_cbor_string", type));
         }
 
         _str.resize(size);
@@ -94,7 +94,7 @@ public:
 
         for (auto c : _str) {
             if constexpr (std::is_same_v<value_type, uint8_t>) {
-                ss << "{:02x}"_format(c);
+                ss << fmt::format("{:02x}", c);
             } else {
                 if (c == '"') {
                     ss << '\\';

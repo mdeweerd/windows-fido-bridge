@@ -4,8 +4,8 @@
 
 #include <windows_fido_bridge/communication.hpp>
 #include <windows_fido_bridge/exceptions.hpp>
-#include <windows_fido_bridge/format.hpp>
 
+#include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
 #include <dlfcn.h>
@@ -118,10 +118,12 @@ byte_vector invoke_windows_bridge(const uint8_t* buffer, size_t length) {
             execl(windows_exe_path.c_str(), windows_exe_path.c_str(), nullptr);
 
             // exec* should not return; if we get to this point, it failed
-            throw_errno_exception("Failed to exec into Windows bridge at \"{}\""_format(windows_exe_path));
+            throw_errno_exception(fmt::format("Failed to exec into Windows bridge at \"{}\"", windows_exe_path));
         } catch (const std::exception& ex) {
-            std::cerr << "ERROR: caught exception while attempting to invoke the Windows bridge: "
-                         "{}\nAborting\n"_format(ex.what());
+            std::cerr << fmt::format(
+                    "ERROR: caught exception while attempting to invoke the Windows bridge: {}\nAborting\n",
+                    ex.what()
+            );
             std::fflush(stderr);
             std::abort();
         } catch (...) {
@@ -163,7 +165,7 @@ byte_vector invoke_windows_bridge(const uint8_t* buffer, size_t length) {
 
     int exit_code = WEXITSTATUS(status);
     if (exit_code != 0) {
-        throw std::runtime_error("Child process exited with code {}"_format(exit_code));
+        throw std::runtime_error(fmt::format("Child process exited with code {}", exit_code));
     }
 
     return output;
