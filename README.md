@@ -39,7 +39,7 @@ repository at [apt.mgbowen.dev](https://apt.mgbowen.dev). Go to that link and
 follow its instructions to set up access to the repository for your operating
 system, then run the following:
 
-```
+```shell
 sudo apt install windows-fido-bridge
 ```
 
@@ -47,7 +47,7 @@ sudo apt install windows-fido-bridge
 
 You can also build this repository from source:
 
-```
+```shell
 sudo apt install build-essential cmake g++-mingw-w64-x86-64-posix git
 
 git clone https://github.com/mgbowen/windows-fido-bridge.git
@@ -63,7 +63,7 @@ sudo make install
 There is also the option of packaging the built binaries into a deb package and
 installing that package instead of using `make install`:
 
-```
+```shell
 sudo apt install debhelper
 
 make package
@@ -147,7 +147,7 @@ to enable this behavior:
 
 * When creating an OpenSSH security key-backed SSH key, set the FIDO application
   to `ssh:windows-fido-bridge-verify-required`, like so:
-  ```
+  ```shell
   SSH_SK_PROVIDER=libwindowsfidobridge.so \
       ssh-keygen -t ecdsa-sk -Oapplication=ssh:windows-fido-bridge-verify-required
   ```
@@ -200,7 +200,7 @@ filesystem (for example, `C:\Users\<username>\bin`), add that directory to your
 `PATH`, and create a file inside that directory named `ssh.bat` with the
 following contents:
 
-```
+```batch
 @wsl ssh %*
 ```
 
@@ -230,7 +230,7 @@ building inside Cygwin and adjust the default options accordingly. The default
 build artifact will be a library named `cygwindowsfidobridge.dll`, which is the
 file you should specify when telling SSH what SK middleware to use. For example:
 
-```
+```shell
 # Generate a security key-backed SSH key:
 SSH_SK_PROVIDER=cygwindowsfidobridge.dll ssh-keygen -t ecdsa-sk
 
